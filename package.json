@@ -1,6 +1,6 @@
 {
   "name": "canplay",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Detect whether a video element has enough data such that it can be played and render frames",
   "main": "index.js",
   "scripts": {
