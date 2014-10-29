@@ -1,3 +1,5 @@
+var EVENTS = ['canplay', 'loadedmetadata'];
+
 /**
   # canplay
 
@@ -11,11 +13,21 @@
   <<< examples/simple.js
 **/
 module.exports = function(el, callback) {
+  var playableTimer;
 
   function canplay(evt) {
+    if (el.videoWidth === 0 || el.videoHeight === 0) {
+      clearTimeout(playableTimer);
+      playableTimer = setTimeout(canplay, 100);
+
+      return;
+    }
+
     el.play();
-    el.removeEventListener('canplay', canplay);
-    el.removeEventListener('loadedmetadata', canplay);
+    EVENTS.forEach(function(eventName) {
+      el.removeEventListener(eventName, canplay);
+    });
+
     callback(null, el);
   }
 
@@ -23,8 +35,9 @@ module.exports = function(el, callback) {
     return callback(null, el);
   }
 
-  el.addEventListener('canplay', canplay, false);
-  el.addEventListener('loadedmetadata', canplay, false);
+  EVENTS.forEach(function(eventName) {
+    el.addEventListener(eventName, canplay, false);
+  });
 
   return false;
 };
